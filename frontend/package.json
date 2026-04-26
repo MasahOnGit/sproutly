@@ -1,0 +1,11 @@
+{
+  "name": "sproutly-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve ."
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

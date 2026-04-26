@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sproutly Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="admin-body">
+  <main class="admin-shell card panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Second frontend component</p>
+        <h1>Sproutly Admin</h1>
+      </div>
+      <button id="adminRefreshBtn" class="ghost-button">Refresh data</button>
+    </div>
+    <div class="admin-grid">
+      <section class="soft-panel">
+        <h2>Plants</h2>
+        <div id="adminPlants"></div>
+      </section>
+      <section class="soft-panel">
+        <h2>Weather</h2>
+        <div id="adminWeather"></div>
+      </section>
+      <section class="soft-panel">
+        <h2>Care Guide</h2>
+        <div id="adminCare"></div>
+      </section>
+    </div>
+  </main>
+  <script src="./js/admin.js" defer></script>
+</body>
+</html>
