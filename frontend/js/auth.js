@@ -106,3 +106,23 @@ export function setupAuthForms() {
         goToWelcome();
     });
 }
+export async function restoreSession() {
+    try {
+        const result = await api('/auth/me');
+
+        state.mode = 'user';
+        state.loggedInUser = result.user;
+
+        goToDashboard();
+
+        await Promise.all([
+            loadPlants(),
+            loadWeather(),
+            loadCareGuide()
+        ]);
+    } catch {
+        state.mode = 'guest';
+        state.loggedInUser = null;
+        goToWelcome();
+    }
+}

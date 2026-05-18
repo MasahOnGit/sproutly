@@ -1,13 +1,16 @@
 package com.sproutly.controller;
 
 import com.sproutly.entity.Plant;
+import com.sproutly.entity.User;
 import com.sproutly.repository.PlantRepository;
+import com.sproutly.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/plants")
@@ -16,42 +19,61 @@ public class PlantController {
     @Autowired
     private PlantRepository plantRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
     public List<Plant> getPlants(Authentication auth) {
-        Long userId = getUserId(auth);
-        return plantRepository.findByUserId(userId);
+        return plantRepository.findByUserId(getUserId(auth));
     }
 
     @PostMapping
     public Plant createPlant(@RequestBody Plant plant, Authentication auth) {
         plant.setUserId(getUserId(auth));
-        plant.setLastWatered(LocalDate.now());
+
+        if (plant.getLastWatered() == null) {
+            plant.setLastWatered(LocalDate.now());
+        }
+
+        if (plant.getWateringIntervalDays() == null) {
+            plant.setWateringIntervalDays(7);
+        }
+
         return plantRepository.save(plant);
     }
 
     @PatchMapping("/{id}/water")
     public Plant waterPlant(@PathVariable Long id, Authentication auth) {
         Plant plant = plantRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Plant not found"));
+                .orElseThrow(() -> new RuntimeException("Plant not found"));
+
         if (!plant.getUserId().equals(getUserId(auth))) {
             throw new RuntimeException("Unauthorized");
         }
+
         plant.setLastWatered(LocalDate.now());
         return plantRepository.save(plant);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePlant(@PathVariable Long id, Authentication auth) {
+    public ResponseEntity<?> deletePlant(@PathVariable Long id, Authentication auth) {
         Plant plant = plantRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Plant not found"));
+                .orElseThrow(() -> new RuntimeException("Plant not found"));
+
         if (!plant.getUserId().equals(getUserId(auth))) {
-            throw new RuntimeException("Unauthorized");
+            return ResponseEntity.status(403).body(Map.of("message", "Unauthorized"));
         }
+
         plantRepository.delete(plant);
+        return ResponseEntity.noContent().build();
     }
 
     private Long getUserId(Authentication auth) {
-        // In real app, extract userId from JWT/session
-        return 1L; // Simplified for demo
+        String email = auth.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getId();
     }
 }

@@ -10,12 +10,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -27,6 +27,11 @@ public class SecurityConfig {
 
     public SecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Bean
+    public RestClient restClient() {
+        return RestClient.builder().build();
     }
 
     @Bean
@@ -66,7 +71,11 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500", "http://localhost:3000"));
+                    configuration.setAllowedOrigins(List.of(
+                            "http://127.0.0.1:5500",
+                            "http://localhost:5500",
+                            "http://localhost:3000"
+                    ));
                     configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
                     configuration.setAllowedHeaders(List.of("*"));
                     configuration.setAllowCredentials(true);
@@ -76,14 +85,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/auth/logout").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/plant-identify").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/weather/**", "/api/care-guide/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .formLogin(form -> form.disable())
-                .httpBasic(Customizer.withDefaults());
-
+                .httpBasic(httpBasic -> httpBasic.disable());
         return http.build();
     }
 }

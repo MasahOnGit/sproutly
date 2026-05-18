@@ -64,3 +64,29 @@ label {
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
+
+.camera-box {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.8rem;
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+}
+
+.camera-preview,
+.captured-preview {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.camera-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+}

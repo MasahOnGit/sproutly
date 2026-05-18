@@ -1,7 +1,7 @@
 import { renderWelcomeScreen } from '../components/welcome-screen.js';
 import { renderDashboardScreen } from '../components/dashboard-screen.js';
 import { setupTheme, setupTabs, updateModeUI, showScreen } from './ui.js';
-import { setupAuthForms } from './auth.js';
+import {restoreSession, setupAuthForms} from './auth.js';
 import { setupDashboardForms } from './forms.js';
 
 function mountScreens() {
@@ -16,7 +16,7 @@ function bootstrap() {
   setupAuthForms();
   setupDashboardForms();
   updateModeUI();
-  showScreen('welcomeScreen');
+  restoreSession();
 }
 
 document.addEventListener('DOMContentLoaded', bootstrap);

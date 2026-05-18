@@ -99,19 +99,33 @@ export function renderPlants(plants, handlers) {
 }
 
 export function bindPlantCardActions(handlers) {
-    document.querySelectorAll('[data-water]').forEach((button) => {
-        button.addEventListener('click', () => handlers.waterPlant(Number(button.dataset.water)));
-    });
+    const grid = qs('#plantGrid');
 
-    document.querySelectorAll('[data-delete]').forEach((button) => {
-        button.addEventListener('click', () => handlers.deletePlant(Number(button.dataset.delete)));
-    });
+    if (!grid) return;
 
-    document.querySelectorAll('[data-care]').forEach((button) => {
-        button.addEventListener('click', () => handlers.loadCareGuide(button.dataset.care));
-    });
+    grid.onclick = async (event) => {
+        const waterButton = event.target.closest('[data-water]');
+        const deleteButton = event.target.closest('[data-delete]');
+        const careButton = event.target.closest('[data-care]');
+        const removeGuestButton = event.target.closest('[data-remove-guest]');
 
-    document.querySelectorAll('[data-remove-guest]').forEach((button) => {
-        button.addEventListener('click', handlers.removeGuestPlant);
-    });
+        if (waterButton) {
+            await handlers.waterPlant(Number(waterButton.dataset.water));
+            return;
+        }
+
+        if (deleteButton) {
+            await handlers.deletePlant(Number(deleteButton.dataset.delete));
+            return;
+        }
+
+        if (careButton) {
+            await handlers.loadCareGuide(careButton.dataset.care);
+            return;
+        }
+
+        if (removeGuestButton) {
+            handlers.removeGuestPlant();
+        }
+    };
 }

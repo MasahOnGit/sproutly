@@ -46,13 +46,23 @@ export async function loadCareGuide(plant = 'Monstera') {
 }
 
 export async function waterPlant(id) {
-    await api(`/plants/${id}/water`, { method: 'PATCH' });
-    await loadPlants();
+    try {
+        await api(`/plants/${id}/water`, { method: 'PATCH' });
+        await loadPlants();
+    } catch (error) {
+        console.error('Water plant failed:', error);
+        alert('Could not mark plant as watered.');
+    }
 }
 
 export async function deletePlant(id) {
-    await api(`/plants/${id}`, { method: 'DELETE' });
-    await loadPlants();
+    try {
+        await api(`/plants/${id}`, { method: 'DELETE' });
+        await loadPlants();
+    } catch (error) {
+        console.error('Delete plant failed:', error);
+        alert('Could not delete plant.');
+    }
 }
 
 export function removeGuestPlant() {

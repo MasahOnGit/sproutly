@@ -13,9 +13,12 @@ public class Plant {
     @Column(nullable = false)
     private String name;
 
+    @Lob
+    @Column(columnDefinition = "CLOB")
+    private String photoUrl;
+
     private String type;
     private String speciesSlug;
-    private String photoUrl;
     private String location;
     private String notes;
 

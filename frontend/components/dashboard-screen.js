@@ -43,7 +43,22 @@ export function renderDashboardScreen() {
           <label>Name<input type="text" name="name" placeholder="Monstera Mia" required></label>
           <label>Type<input type="text" name="type" placeholder="Monstera" required></label>
           <label>Species slug<input type="text" name="speciesSlug" placeholder="monstera-deliciosa"></label>
-          <label>Photo URL<input type="url" name="photoUrl" placeholder="https://..."></label>
+          <label>Photo URL<input type="url" name="photoUrl" id="photoUrlInput" placeholder="https://..."></label>
+        
+            <div class="camera-box">
+              <video id="plantCamera" class="camera-preview hidden" autoplay playsinline></video>
+              <canvas id="plantCanvas" class="hidden"></canvas>
+              <img id="capturedPlantPreview" class="captured-preview hidden" alt="Captured plant preview">
+            
+              <div class="camera-actions">
+                <button type="button" class="ghost-button" id="startCameraBtn">Use camera</button>
+                <button type="button" class="ghost-button hidden" id="capturePlantBtn">Take photo</button>
+                <button type="button" class="ghost-button hidden" id="stopCameraBtn">Stop camera</button>
+                <button type="button" class="ghost-button" id="analyzePlantBtn">Scan plant</button>
+              </div>
+        
+          <p id="cameraMessage" class="helper-text"></p>
+        </div>
           <label>Location<input type="text" name="location" placeholder="Living room"></label>
           <label>Water interval (days)<input type="number" name="wateringIntervalDays" min="1" max="30" value="7"></label>
           <label>Notes<textarea name="notes" rows="3" placeholder="Bright indirect light"></textarea></label>
