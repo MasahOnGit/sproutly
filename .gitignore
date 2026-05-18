@@ -1,3 +1,12 @@
-.idea/
+# Maven
+target/
+
+# H2 database
+*.mv.db
+*.trace.db
+
+# macOS
 .DS_Store
-backend/target/
+
+# Node
+node_modules/
