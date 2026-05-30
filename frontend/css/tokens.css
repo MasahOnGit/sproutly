@@ -1,34 +1,100 @@
+/* =========================
+   LIGHT THEME VARIABLES
+========================= */
+
 :root {
+
+    /* Main background color */
     --bg: #efefe3;
+
+    /* Semi-transparent card surfaces */
     --surface: rgba(255, 255, 255, 0.56);
+
+    /* Stronger card backgrounds */
     --surface-strong: #f8f7ef;
+
+    /* Softer background panels */
     --surface-soft: #e7e5d2;
+
+    /* Primary green brand color */
     --primary: #728f42;
+
+    /* Darker primary shade */
     --primary-dark: #55692d;
+
+    /* Accent pink color */
     --accent: #e48a97;
+
+    /* Soft accent background */
     --accent-soft: #f7d4da;
+
+    /* Main text color */
     --text: #121212;
+
+    /* Muted secondary text */
     --muted: #6e6d63;
+
+    /* Shared border color */
     --border: rgba(18, 18, 18, 0.1);
+
+    /* Main large shadow */
     --shadow: 0 18px 35px rgba(69, 77, 43, 0.12);
+
+    /* Softer smaller shadow */
     --shadow-soft: 0 10px 24px rgba(69, 77, 43, 0.08);
+
+    /* Large border radius */
     --radius-xl: 28px;
+
+    /* Medium-large border radius */
     --radius-lg: 22px;
+
+    /* Medium border radius */
     --radius-md: 16px;
 }
 
+/* =========================
+   DARK THEME VARIABLES
+========================= */
+
 [data-theme="dark"] {
+
+    /* Main dark background */
     --bg: #1d2018;
+
+    /* Dark glass-style surface */
     --surface: rgba(38, 42, 33, 0.76);
+
+    /* Strong dark panels */
     --surface-strong: #2a2f24;
+
+    /* Soft dark surfaces */
     --surface-soft: #30362b;
+
+    /* Lighter green primary color */
     --primary: #a4bf6b;
+
+    /* Bright green highlight */
     --primary-dark: #d5e4aa;
+
+    /* Light pink accent */
     --accent: #f0a1ad;
+
+    /* Transparent accent background */
     --accent-soft: rgba(240, 161, 173, 0.18);
+
+    /* Main light text color */
     --text: #f5f4ef;
+
+    /* Muted text color */
     --muted: #b3b1a4;
+
+    /* Subtle border color */
     --border: rgba(255,255,255,0.08);
+
+    /* Main dark shadow */
     --shadow: 0 18px 35px rgba(0,0,0,0.28);
+
+    /* Softer dark shadow */
     --shadow-soft: 0 10px 24px rgba(0,0,0,0.18);
 }

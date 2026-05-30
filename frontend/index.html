@@ -1,50 +1,134 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
+  <!-- Basic page metadata -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Makes the layout responsive on mobile devices -->
+  <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+  />
+
+  <!-- Browser tab title -->
   <title>Sproutly Smart Plant Tracker</title>
+
+  <!-- Google Fonts performance optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Preconnect for font asset loading -->
+  <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin
+  />
+
+  <!-- Application fonts -->
+  <link
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+          rel="stylesheet"
+  />
+
+  <!-- Global design tokens -->
   <link rel="stylesheet" href="./css/tokens.css" />
+
+  <!-- Base/global styles -->
   <link rel="stylesheet" href="./css/base.css" />
+
+  <!-- Layout styles -->
   <link rel="stylesheet" href="./css/layout.css" />
+
+  <!-- Reusable component styles -->
   <link rel="stylesheet" href="./css/components.css" />
+
+  <!-- Decorative plant illustration styles -->
   <link rel="stylesheet" href="./css/plant-illustration.css" />
 </head>
-<body>
-<a class="skip-link" href="#main-content">Skip to content</a>
 
+<body>
+
+<!-- Accessibility skip link -->
+<a class="skip-link" href="#main-content">
+  Skip to content
+</a>
+
+<!-- Decorative background elements -->
 <div class="background-decor decor-a"></div>
 <div class="background-decor decor-b"></div>
 <div class="background-decor decor-c"></div>
 
+<!-- Application header -->
 <header class="app-header">
+
+  <!-- Brand/logo section -->
   <div class="brand-wrap">
-    <div class="brand-mark" aria-label="Sproutly logo">
+
+    <!-- Decorative logo illustration -->
+    <div
+            class="brand-mark"
+            aria-label="Sproutly logo"
+    >
       <span class="leaf leaf-left"></span>
       <span class="leaf leaf-right"></span>
       <span class="stem"></span>
     </div>
+
+    <!-- Application title -->
     <div>
       <p class="eyebrow">Smart plant tracker</p>
       <h1>Sproutly</h1>
     </div>
   </div>
 
+  <!-- Header controls -->
   <div class="header-actions">
-    <div id="modeBadge" class="mode-badge">Guest</div>
-    <button id="themeToggle" class="icon-button" aria-label="Toggle theme">☼</button>
-    <button id="logoutBtn" class="ghost-button hidden">Logout</button>
+
+    <!-- Current application mode -->
+    <div id="modeBadge" class="mode-badge">
+      Guest
+    </div>
+
+    <!-- Light/dark theme toggle -->
+    <button
+            id="themeToggle"
+            class="icon-button"
+            aria-label="Toggle theme"
+    >
+      ☼
+    </button>
+
+    <!-- Logout button shown only for authenticated users -->
+    <button
+            id="logoutBtn"
+            class="ghost-button hidden"
+    >
+      Logout
+    </button>
   </div>
 </header>
 
+<!-- Main application content -->
 <main id="main-content">
-  <section id="welcomeScreen" class="screen screen-active"></section>
-  <section id="dashboardScreen" class="screen"></section>
+
+  <!-- Welcome/authentication screen -->
+  <section
+          id="welcomeScreen"
+          class="screen screen-active"
+  ></section>
+
+  <!-- Dashboard screen -->
+  <section
+          id="dashboardScreen"
+          class="screen"
+  ></section>
 </main>
 
-<script type="module" src="./js/app.js"></script>
+<!-- Main application JavaScript -->
+<script
+        type="module"
+        src="./js/app.js"
+></script>
+
 </body>
 </html>

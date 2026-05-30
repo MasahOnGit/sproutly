@@ -1,38 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Basic page metadata -->
   <meta charset="UTF-8">
+
+  <!-- Makes the layout responsive on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Browser tab title -->
   <title>Sproutly Admin Panel</title>
+
+  <!-- Google Fonts performance optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Preconnect for font assets -->
+  <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin
+  >
+
+  <!-- Application fonts -->
+  <link
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+          rel="stylesheet"
+  >
+
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="./css/styles.css">
 </head>
+
 <body class="admin-body">
-  <main class="admin-shell card panel">
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">Second frontend component</p>
-        <h1>Sproutly Admin</h1>
-      </div>
-      <button id="adminRefreshBtn" class="ghost-button">Refresh data</button>
+
+<!-- Main admin dashboard container -->
+<main class="admin-shell card panel">
+
+  <!-- Admin dashboard header -->
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Second frontend component</p>
+      <h1>Sproutly Admin</h1>
     </div>
-    <div class="admin-grid">
-      <section class="soft-panel">
-        <h2>Plants</h2>
-        <div id="adminPlants"></div>
-      </section>
-      <section class="soft-panel">
-        <h2>Weather</h2>
-        <div id="adminWeather"></div>
-      </section>
-      <section class="soft-panel">
-        <h2>Care Guide</h2>
-        <div id="adminCare"></div>
-      </section>
-    </div>
-  </main>
-  <script src="./js/admin.js" defer></script>
+
+    <!-- Refreshes dashboard data -->
+    <button
+            id="adminRefreshBtn"
+            class="ghost-button"
+    >
+      Refresh data
+    </button>
+  </div>
+
+  <!-- Admin dashboard content grid -->
+  <div class="admin-grid">
+
+    <!-- Plant information panel -->
+    <section class="soft-panel">
+      <h2>Plants</h2>
+
+      <!-- Dynamically rendered plant data -->
+      <div id="adminPlants"></div>
+    </section>
+
+    <!-- Weather information panel -->
+    <section class="soft-panel">
+      <h2>Weather</h2>
+
+      <!-- Dynamically rendered weather data -->
+      <div id="adminWeather"></div>
+    </section>
+
+    <!-- Plant care guide panel -->
+    <section class="soft-panel">
+      <h2>Care Guide</h2>
+
+      <!-- Dynamically rendered care guide data -->
+      <div id="adminCare"></div>
+    </section>
+  </div>
+</main>
+
+<!-- Admin dashboard JavaScript -->
+<script src="./js/admin.js" defer></script>
 </body>
 </html>
