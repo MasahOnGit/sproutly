@@ -1,105 +1,121 @@
 package com.sproutly.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * Controller responsible for providing plant care information.
- *
- * This controller:
- * - Receives a plant name from the frontend
- * - Uses the GBIF API to search for scientific plant data
- * - Returns basic plant care guidance
- */
 @RestController
 @RequestMapping("/api/care-guide")
 public class CareGuideController {
 
-    /**
-     * HTTP client used to communicate with external APIs.
-     */
     private final RestClient restClient;
 
-    /**
-     * Creates a new CareGuideController.
-     *
-     * @param restClient reusable HTTP client bean
-     */
+    @Value("${perenual.api.key}")
+    private String perenualApiKey;
+
     public CareGuideController(RestClient restClient) {
         this.restClient = restClient;
     }
 
-    /**
-     * Retrieves a basic care guide for a plant.
-     *
-     * <p>This endpoint:
-     * <ul>
-     *     <li>Sends a request to the GBIF species API</li>
-     *     <li>Attempts to find scientific classification data</li>
-     *     <li>Returns general plant care recommendations</li>
-     * </ul>
-     * </p>
-     *
-     * Example request:
-     * <pre>
-     * GET /api/care-guide?plant=basil
-     * </pre>
-     *
-     * @param plant common or scientific plant name provided by the user
-     * @return map containing plant information and care instructions
-     */
     @GetMapping
     public Map<String, Object> getCareGuide(@RequestParam String plant) {
 
-        // Send request to the GBIF API to search for the plant species
-        Map gbif = restClient.get()
+        // 1. Search Perenual for common name, scientific name, and image
+        Map perenualResponse = restClient.get()
                 .uri(
-                        "https://api.gbif.org/v1/species/search?q={plant}&rank=SPECIES&limit=1",
+                        "https://perenual.com/api/v2/species-list?key={key}&q={plant}",
+                        perenualApiKey,
                         plant
                 )
                 .retrieve()
                 .body(Map.class);
 
-        // Extract the "results" array from the API response
-        List results = gbif == null ? null : (List) gbif.get("results");
+        List perenualResults = perenualResponse == null
+                ? null
+                : (List) perenualResponse.get("data");
 
-        // Default values in case the API does not find a match
-        String scientificName = plant;
-        String family = "Unknown family";
-
-        // If results exist, extract scientific name and family
-        if (results != null && !results.isEmpty()) {
-
-            // Get the first matching species result
-            Map first = (Map) results.get(0);
-
-            // Extract scientific name from the response
-            scientificName = String.valueOf(
-                    first.getOrDefault("scientificName", plant)
-            );
-
-            // Extract plant family from the response
-            family = String.valueOf(
-                    first.getOrDefault("family", "Unknown family")
+        if (perenualResults == null || perenualResults.isEmpty()) {
+            return Map.of(
+                    "query", plant,
+                    "error", "Plant not found in Perenual",
+                    "source", "Perenual + GBIF"
             );
         }
 
-        // Return plant information and general care recommendations
+        Map firstPlant = (Map) perenualResults.get(0);
+
+        String commonName = safeValue(firstPlant.get("common_name"));
+        String scientificName = getScientificName(firstPlant.get("scientific_name"));
+        String imageUrl = getImageUrl(firstPlant.get("default_image"));
+
+        // 2. Search GBIF for family using the scientific name
+        String family = getFamilyFromGbif(scientificName);
+
+        // 3. Return combined data to frontend as JSON
         return Map.of(
                 "query", plant,
+                "commonName", commonName,
                 "scientificName", scientificName,
                 "family", family,
-
-                // General indoor plant care advice
-                "sunlight", "Bright indirect light is safest for most indoor plants.",
-                "watering", "Water when the top 2-3 cm of soil feels dry.",
-                "careLevel", "Beginner-friendly",
-
-                // Source description
-                "source", "GBIF species lookup plus general houseplant guidance"
+                "image", imageUrl,
+                "source", "Perenual + GBIF"
         );
+    }
+
+    private String getFamilyFromGbif(String scientificName) {
+        Map gbifResponse = restClient.get()
+                .uri(
+                        "https://api.gbif.org/v1/species/search?q={name}&rank=SPECIES&limit=1",
+                        scientificName
+                )
+                .retrieve()
+                .body(Map.class);
+
+        List results = gbifResponse == null
+                ? null
+                : (List) gbifResponse.get("results");
+
+        if (results == null || results.isEmpty()) {
+            return "Unknown family";
+        }
+
+        Map first = (Map) results.get(0);
+
+        return safeValue(first.get("family"));
+    }
+
+    private String getScientificName(Object value) {
+        if (value instanceof List list && !list.isEmpty()) {
+            return String.valueOf(list.get(0));
+        }
+
+        return value == null ? "Unknown" : String.valueOf(value);
+    }
+
+    private String getImageUrl(Object defaultImage) {
+        if (!(defaultImage instanceof Map imageMap)) {
+            return "No image available";
+        }
+
+        Object regularUrl = imageMap.get("regular_url");
+
+        if (regularUrl != null) {
+            return String.valueOf(regularUrl);
+        }
+
+        Object originalUrl = imageMap.get("original_url");
+
+        if (originalUrl != null) {
+            return String.valueOf(originalUrl);
+        }
+
+        return "No image available";
+    }
+
+    private String safeValue(Object value) {
+        return value == null ? "Unknown" : String.valueOf(value);
     }
 }

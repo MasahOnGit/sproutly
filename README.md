@@ -1,107 +1,166 @@
-# Sproutly
+# Sproutly 🌱
 
-Sproutly is a smart plant tracker web application that helps users manage their plants, explore plant care information, receive watering reminders, and get weather-based watering suggestions.
+Sproutly is a smart plant tracking web application that helps users manage their plants, identify unknown plants, explore plant information, and receive weather-based watering recommendations.
 
-The project is built as a separated frontend and backend system:
-- Frontend: HTML5, CSS3, JavaScript
-- Backend: Java with Spring Boot
-- Communication: HTTP with asynchronous AJAX requests
-- External services: OpenWeather API and Trefle API
+The application is built as a full-stack web project with a clear separation between frontend and backend components.
 
-## Overview
+---
 
-Sproutly is designed for plant lovers who want a simple and modern way to keep track of plant care routines. The application allows users to add plants, store useful information, check care guidelines, and make smarter watering decisions with the help of weather data.
+# Architecture
 
-This project follows a full-stack architecture with a clear separation between frontend and backend responsibilities.
+## Frontend
 
-## Features
+* HTML5
+* CSS3
+* JavaScript (ES Modules)
 
-- Add and manage plants
-- Store plant name, type, photo, notes, and location
-- View plant care guidelines
-- Get weather-based watering suggestions
-- Mobile-friendly dashboard
-- Guest mode for quick testing
-- User authentication
-- Responsive interface for desktop and mobile
+## Backend
 
-## Project goals
+* Java 17
+* Spring Boot
+* Spring Web
+* Spring Data JPA
+* Spring Security
 
-This project is designed to satisfy the main system requirements:
+## Database
 
-- Separate frontend and backend components
-- HTTP communication between frontend and backend
-- AJAX requests for asynchronous updates
-- REST endpoints using GET, POST, PUT, DELETE, and PATCH
-- Session-based authentication and login flow
-- Integration of external REST APIs
-- Responsive design
-- Structured and maintainable project architecture
+* H2 Database
 
-## Tech stack
+## Communication
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript (ES modules)
+* HTTP
+* AJAX (Asynchronous JavaScript and XML)
+* REST API
+* JSON and XML responses
 
-### Backend
-- Java
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- Spring Security
-- H2 or PostgreSQL/MySQL
+---
 
-### External APIs
-- OpenWeather API
-- Trefle API
+# External APIs
 
-## Repository structure
+## Open-Meteo API
+
+Used for:
+
+* Weather forecasts
+* Weather-based watering suggestions
+
+## PlantNet API
+
+Used for:
+
+* Plant identification from uploaded images
+
+## Perenual API
+
+Used for:
+
+* Common plant names
+* Scientific plant names
+* Plant images
+
+## GBIF API
+
+Used for:
+
+* Plant taxonomy
+* Plant family information
+
+---
+
+# Features
+
+## Plant Management
+
+* Add plants
+* Delete plants
+* Store plant information
+* Track watering dates
+* Save notes
+
+## Plant Identification
+
+* Upload a plant image
+* Identify plant species using PlantNet
+* Display identification results
+
+## Plant Information
+
+* Retrieve common plant names
+* Retrieve scientific plant names
+* Retrieve plant family information
+* Display plant images
+
+## Weather Integration
+
+* Weather forecasts
+* Weather-based watering recommendations
+
+## User Management
+
+* User registration
+* User login
+* User logout
+* JWT authentication
+* Guest mode
+
+## Responsive Design
+
+* Desktop support
+* Tablet support
+* Mobile support
+
+---
+
+# Project Goals
+
+This project fulfills the following requirements:
+
+* Separate frontend and backend components
+* HTTP communication between frontend and backend
+* AJAX communication
+* REST architecture
+* JSON responses
+* XML responses
+* Authentication and authorization
+* External API integration
+* Responsive design
+* Structured and maintainable architecture
+
+---
+
+# Technology Stack
+
+## Frontend
+
+* HTML5
+* CSS3
+* JavaScript
+
+## Backend
+
+* Java
+* Spring Boot
+* Spring Security
+* Spring Data JPA
+
+## Database
+
+* H2 Database
+
+---
+
+# Repository Structure
 
 ```text
 sproutly/
 ├── backend/
-│   ├── src/main/java/com/sproutly/
-│   ├── src/main/resources/
-│   └── pom.xml
 ├── frontend/
-│   ├── index.html
-│   ├── admin.html
-│   ├── components/
-│   ├── js/
-│   └── css/
 └── README.md
 ```
 
-## Frontend structure
+---
 
-```text
-frontend/
-├── index.html
-├── admin.html
-├── components/
-│   ├── welcome-screen.js
-│   └── dashboard-screen.js
-├── js/
-│   ├── app.js
-│   ├── admin.js
-│   ├── api.js
-│   ├── auth.js
-│   ├── forms.js
-│   ├── features.js
-│   ├── state.js
-│   └── ui.js
-└── css/
-    ├── tokens.css
-    ├── base.css
-    ├── layout.css
-    ├── components.css
-    ├── plant-illustration.css
-    └── styles.css
-```
-
-## Backend structure
+# Backend Structure
 
 ```text
 backend/
@@ -110,78 +169,212 @@ backend/
     ├── controller/
     ├── entity/
     ├── repository/
-    ├── service/
     └── SproutlyApplication.java
 ```
 
-## Main endpoints
+---
 
-### Authentication
-- POST `/api/auth/register`
-- POST `/api/auth/login`
-- POST `/api/auth/logout`
+# Frontend Structure
 
-### Plants
-- GET `/api/plants`
-- POST `/api/plants`
-- DELETE `/api/plants/{id}`
-- PATCH `/api/plants/{id}/water`
+```text
+frontend/
+├── index.html
+├── admin.html
+├── components/
+├── js/
+└── css/
+```
 
-### Weather and care
-- GET `/api/weather?city=Vienna`
-- GET `/api/care-guide?plant=Monstera`
+---
 
-## Running the project
+# REST API Endpoints
 
-### Backend
-1. Open the `backend/` folder in IntelliJ IDEA or VS Code.
-2. Configure the database in `application.properties` if needed.
-3. Add API keys later if you connect real weather and plant services.
-4. Start the Spring Boot application.
+## Authentication
 
-Run with:
+### Register User
+
+```http
+POST /api/auth/register
+```
+
+### Login User
+
+```http
+POST /api/auth/login
+```
+
+### Logout User
+
+```http
+POST /api/auth/logout
+```
+
+---
+
+## Plants
+
+### Get All Plants
+
+```http
+GET /api/plants
+```
+
+### Create Plant
+
+```http
+POST /api/plants
+```
+
+### Delete Plant
+
+```http
+DELETE /api/plants/{id}
+```
+
+### Mark Plant as Watered
+
+```http
+PATCH /api/plants/{id}/water
+```
+
+---
+
+## Plant Identification
+
+### Identify Plant
+
+```http
+POST /api/identify-plant
+```
+
+Uses the PlantNet API to identify plants from uploaded images.
+
+---
+
+## Weather
+
+### Weather Information
+
+```http
+GET /api/weather
+```
+
+Returns weather information from the Open-Meteo API.
+
+---
+
+## Plant Information
+
+### Plant Details
+
+```http
+GET /api/care-guide?plant=Monstera
+```
+
+Returns:
+
+```json
+{
+  "query": "Monstera",
+  "commonName": "Monstera",
+  "scientificName": "Monstera deliciosa",
+  "family": "Araceae",
+  "image": "...",
+  "source": "Perenual + GBIF"
+}
+```
+
+---
+
+# Response Formats
+
+The backend supports content negotiation and can return both JSON and XML.
+
+JSON:
+
+```http
+Accept: application/json
+```
+
+XML:
+
+```http
+Accept: application/xml
+```
+
+Example:
+
+```bash
+curl -H "Accept: application/xml" \
+"http://localhost:8080/api/care-guide?plant=basil"
+```
+
+---
+
+# Running the Project
+
+## Backend
 
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-### Frontend
-1. Open the `frontend/` folder.
-2. Start a local static server.
-3. Open the app in your browser.
+Backend URL:
 
-Example:
+```text
+http://localhost:8080
+```
+
+---
+
+## Frontend
 
 ```bash
 cd frontend
+npm install
 npm start
 ```
 
-Then open:
+Frontend URL:
 
-- `http://localhost:5500`
-- `http://localhost:5500/admin.html`
+```text
+http://localhost:3000
+```
 
-## Environment variables
+---
 
-Recommended backend configuration for future extension:
+# Configuration
 
-- `DB_URL`
-- `DB_USERNAME`
-- `DB_PASSWORD`
-- `OPENWEATHER_API_KEY`
-- `TREFLE_API_KEY`
-- `JWT_SECRET`
+Configure API keys inside:
 
-## Notes
+```text
+backend/src/main/resources/application.properties
+```
 
-- Guest mode allows quick testing without storing data in the database.
-- Logged-in users can manage persistent plant data.
-- The frontend is split into reusable modules for maintainability.
-- The backend is organized by configuration, controller, entity, repository, and service layers.
-- The project can start with mocked API responses and later be extended with real external API integrations.
+Example:
 
-## Authors
+```properties
+PLANTNET_API_KEY=
+PERENUAL_API_KEY=
+JWT_SECRET=
+```
 
-BugBytes
+---
+
+# Security
+
+The application uses Spring Security and JWT authentication.
+
+Features:
+
+* User authentication
+* JWT token generation
+* Protected API endpoints
+* Secure access control
+
+---
+
+# Authors
+
+**BugBytes**
