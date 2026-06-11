@@ -152,7 +152,7 @@ public class SecurityConfig {
                     ));
 
                     // HTTP methods the frontend is allowed to use
-                    configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
+                    configuration.setAllowedMethods(List.of("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"));
 
                     // Allow all request headers
                     configuration.setAllowedHeaders(List.of("*"));

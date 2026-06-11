@@ -1,3 +1,4 @@
+import { startEditPlant } from './forms.js';
 import { state } from './state.js';
 
 /**
@@ -252,6 +253,13 @@ export function renderPlants(plants, handlers) {
                 </button>
 
                 <button
+                    class="ghost-button"
+                    data-edit="${plant.id}"
+                >
+                Edit
+                </button>
+
+                <button
                   class="ghost-button"
                   data-remove-guest="true"
                 >
@@ -265,6 +273,13 @@ export function renderPlants(plants, handlers) {
                   data-water="${plant.id}"
                 >
                   Mark watered
+                </button>
+
+                <button
+                    class="ghost-button"
+                    data-edit="${plant.id}"
+                >
+                Edit
                 </button>
 
                 <button
@@ -289,6 +304,7 @@ export function renderPlants(plants, handlers) {
  * - Deleting plants
  * - Opening care guides
  * - Removing guest plants
+ * - Editing plants (reusing the add form)
  *
  * @param {Object} handlers plant action handlers
  */
@@ -317,6 +333,9 @@ export function bindPlantCardActions(handlers) {
         const removeGuestButton =
             event.target.closest('[data-remove-guest]');
 
+        const editButton = 
+            event.target.closest('[data-edit]');
+
         // Water plant
         if (waterButton) {
 
@@ -325,7 +344,7 @@ export function bindPlantCardActions(handlers) {
             );
 
             return;
-        }
+        }        
 
         // Delete plant
         if (deleteButton) {
