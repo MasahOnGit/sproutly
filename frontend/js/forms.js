@@ -318,6 +318,9 @@ export function setupDashboardForms() {
                     state.guestPlants = [payload];
                 }
 
+                // Reset form
+                cancelEditPlant();
+
                 // Refresh UI
                 await loadPlants();
 
@@ -325,13 +328,6 @@ export function setupDashboardForms() {
                 await loadCareGuide(
                     payload.type || payload.name || 'Monstera'
                 );
-
-                // Reset form
-                delete plantForm.dataset.editingId;
-                plantForm.reset();
-                qs('#capturedPlantPreview')?.classList.add('hidden');
-                const interval = plantForm.querySelector('input[name="wateringIntervalDays"]');
-                if (interval) interval.value = 7;
             }
 
             catch (error) {
@@ -374,14 +370,7 @@ export function setupDashboardForms() {
             }
 
             // Reset form
-            delete plantForm.dataset.editingId;
-            plantForm.reset();
-            qs('#capturedPlantPreview')?.classList.add('hidden');
-            const interval = plantForm.querySelector('input[name="wateringIntervalDays"]');
-            if (interval) interval.value = 7;
-
-            // Hide image preview
-            qs('#capturedPlantPreview')?.classList.add('hidden');
+            cancelEditPlant();
 
             // Reload plants
             await loadPlants();
