@@ -73,6 +73,7 @@ Used for:
 
 * Add plants
 * Delete plants
+* Edit plants
 * Store plant information
 * Track watering dates
 * Save notes
@@ -231,6 +232,11 @@ POST /api/plants
 DELETE /api/plants/{id}
 ```
 
+### Edit Plant
+
+```http
+PUT /api/plants/{id}
+```
 ### Mark Plant as Watered
 
 ```http

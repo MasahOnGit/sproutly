@@ -250,7 +250,6 @@ function setupPlantCamera() {
  * - Plant editing
  * - Weather lookup
  * - Care guide lookup
- * - Plant list refresh
  */
 export function setupDashboardForms() {
 
@@ -258,9 +257,6 @@ export function setupDashboardForms() {
     const plantForm = qs('#plantForm');
     const weatherForm = qs('#weatherForm');
     const careForm = qs('#careForm');
-
-    // Dashboard controls
-    const refreshPlantsBtn = qs('#refreshPlantsBtn');
 
     // Guest mode warning message
     const guestLimitMessage = qs('#guestLimitMessage');
@@ -410,14 +406,6 @@ export function setupDashboardForms() {
         await loadCareGuide(plant);
     });
 
-    /**
-     * Reloads the plant list when the refresh button is clicked.
-     */
-    refreshPlantsBtn?.addEventListener('click', async () => {
-        guestLimitMessage.textContent = '';
-
-        await loadPlants();
-    });
 
     /**
      * Reusing creation form for edit plant

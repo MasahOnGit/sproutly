@@ -21,7 +21,6 @@ export function renderDashboardScreen() {
       <!-- Dashboard hero section -->
       <section class="hero-card card glass dashboard-hero">
         <div>
-          <p class="eyebrow accent">Second screen</p>
           <h2>Your dashboard</h2>
           <p class="lede" id="dashboardIntro">Welcome to your care space.</p>
         </div>
@@ -71,11 +70,6 @@ export function renderDashboardScreen() {
             <p class="eyebrow">My collection</p>
             <h2>Plant dashboard</h2>
           </div>
-
-          <!-- Refreshes the plant list -->
-          <button id="refreshPlantsBtn" class="ghost-button">
-            Refresh
-          </button>
         </div>
 
         <!-- Form used to add a new plant -->

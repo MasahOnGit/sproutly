@@ -74,12 +74,6 @@ async function loadAdminData() {
 }
 
 /**
- * Reloads admin dashboard data when the refresh button is clicked.
- */
-document.querySelector('#adminRefreshBtn')
-    .addEventListener('click', loadAdminData);
-
-/**
  * Loads admin dashboard data when the page finishes loading.
  */
 document.addEventListener('DOMContentLoaded', loadAdminData);
