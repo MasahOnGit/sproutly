@@ -82,6 +82,50 @@ public class PlantController {
         return plantRepository.save(plant);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePlant(@PathVariable Long id, @RequestBody Plant updates, Authentication auth){
+        
+        //Find the plant by Id
+        Plant plant = plantRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Plant not found"));
+
+        // Ensure the plant belongs to the logged-in user
+        if (!plant.getUserId().equals(getUserId(auth))) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        //Update allowed fields
+        if (updates.getName() !=null) {
+            plant.setName(updates.getName());
+        }
+        if (updates.getType() !=null) {
+            plant.setType(updates.getType());
+        }
+        if (updates.getSpeciesSlug() !=null){
+            plant.setSpeciesSlug(updates.getSpeciesSlug());
+        }
+        if (updates.getPhotoUrl() !=null){
+            plant.setPhotoUrl(updates.getPhotoUrl());
+        }
+        if (updates.getLocation() !=null){
+            plant.setLocation(updates.getLocation());
+        }
+        if (updates.getNotes() !=null){
+            plant.setNotes(updates.getNotes());
+        }
+        if (updates.getWateringIntervalDays() !=null){
+            plant.setWateringIntervalDays(updates.getWateringIntervalDays());
+        }
+        if (updates.getLastWatered() !=null){
+            plant.setLastWatered(updates.getLastWatered());
+        }
+        
+        // Save updated plant
+        Plant saved = plantRepository.save(plant);
+        return ResponseEntity.ok(saved);
+
+    }
+
     /**
      * Updates a plant's last watered date to today.
      *

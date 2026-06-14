@@ -247,6 +247,7 @@ function setupPlantCamera() {
  *
  * This includes:
  * - Plant creation
+ * - Plant editing
  * - Weather lookup
  * - Care guide lookup
  * - Plant list refresh
@@ -275,6 +276,8 @@ export function setupDashboardForms() {
 
         guestLimitMessage.textContent = '';
 
+        const editingId = plantForm.dataset.editingId || null;
+
         // Build plant object from form fields
         const payload = buildPlantPayload(plantForm);
 
@@ -283,51 +286,91 @@ export function setupDashboardForms() {
 
         // Guest mode logic
         if (state.mode === 'guest') {
+            try {
+                if (editingId) {
+                    const i = state.guestPlants.findIndex(p => String(p.id) === String(editingId));
+                    if (i !== -1) {
+                        // map form values to fields
+                        const updatePayload = {
+                            name: plantForm.elements['name']?.value ?? '',
+                            type: plantForm.elements['type']?.value ?? '',
+                            speciesSlug: plantForm.elements['speciesSlug']?.value ?? '',
+                            photoUrl: plantForm.elements['photoUrl']?.value ?? '',
+                            location: plantForm.elements['location']?.value ?? '',
+                            notes: plantForm.elements['notes']?.value ?? '',
+                            wateringIntervalDays: Number(plantForm.elements['wateringIntervalDays']?.value || 7),
+                            //lastWatered: plantForm.elements['lastWatered']?.value ?? payload.lastWatered,
+                        };
+                        state.guestPlants[i] = { ...state.guestPlants[i], ...updatePayload };
+                    }
+                } else {
+                    // Limit guest users to one plant
+                    if (state.guestPlants.length >= 1) {
+                        guestLimitMessage.textContent =
+                            'Guest users can only add one plant.';
 
-            // Limit guest users to one plant
-            if (state.guestPlants.length >= 1) {
-                guestLimitMessage.textContent =
-                    'Guest users can only add one plant.';
+                        return;
+                    }
 
-                return;
+                    // Create temporary guest plant
+                    payload.id = Date.now();
+
+                    state.guestPlants = [payload];
+                }
+
+                // Reset form
+                cancelEditPlant();
+
+                // Refresh UI
+                await loadPlants();
+
+                // Load care guide for the added plant
+                await loadCareGuide(
+                    payload.type || payload.name || 'Monstera'
+                );
             }
 
-            // Create temporary guest plant
-            payload.id = Date.now();
-
-            state.guestPlants = [payload];
-
-            // Refresh UI
-            await loadPlants();
-
-            // Load care guide for the added plant
-            await loadCareGuide(
-                payload.type || payload.name || 'Monstera'
-            );
-
-            // Reset form
-            plantForm.reset();
-
-            // Hide image preview
-            qs('#capturedPlantPreview')?.classList.add('hidden');
+            catch (error) {
+                guestLimitMessage.textContent = error.message || 'Could not save plant.';// Hide image preview
+                qs('#capturedPlantPreview')?.classList.add('hidden');
+            }
 
             return;
         }
 
         // Logged-in user logic
         try {
+            if (editingId) {
+                const updatePayload = {
+                    name: plantForm.elements['name']?.value || null,
+                    type: plantForm.elements['type']?.value || null,
+                    speciesSlug: plantForm.elements['speciesSlug']?.value || null,
+                    photoUrl: plantForm.elements['photoUrl']?.value || null,
+                    location: plantForm.elements['location']?.value || null,
+                    notes: plantForm.elements['notes']?.value || null,
+                    wateringIntervalDays: (plantForm.elements['wateringIntervalDays']?.value !== ''
+                        ? Number(plantForm.elements['wateringIntervalDays'].value)
+                        : null),
+                    //lastWatered: plantForm.elements['lastWatered']? (plantForm.elements['lastWatered'].value || null)
+                    //: null,
 
-            // Save plant to backend database
-            await api('/plants', {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
+                };
+
+                await api(`/plants/${editingId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatePayload)
+                });
+            } else {
+                // Save plant to backend database
+                await api('/plants', {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            }
 
             // Reset form
-            plantForm.reset();
-
-            // Hide image preview
-            qs('#capturedPlantPreview')?.classList.add('hidden');
+            cancelEditPlant();
 
             // Reload plants
             await loadPlants();
@@ -375,4 +418,83 @@ export function setupDashboardForms() {
 
         await loadPlants();
     });
+
+    /**
+     * Reusing creation form for edit plant
+     */
+
+    const grid = document.querySelector('#plantGrid');
+    grid?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-edit]');
+        if (!btn) return;
+
+        // Use parseInt to avoid any "Number is not defined" confusion
+        const id = parseInt(btn.dataset.edit, 10);
+        const list = state.mode === 'guest' ? state.guestPlants : state.plants;
+        const plant = list.find(p => parseInt(p.id, 10) === id);
+        if (plant) startEditPlant(plant);
+    });
+}
+
+export function startEditPlant(plant) {
+    const form = qs('#plantForm');
+    const submitBtn = qs('#addPlantBtn');
+    const heading = qs('.section-head h2');
+
+    if (!form || !submitBtn) return;
+
+    // Prefill form with existing data
+    form.elements['name'].value = plant.name ?? '';
+    if (form.elements['type']) {
+        form.elements['type'].value = plant.type ?? plant.species ?? '';
+    }
+    if (form.elements['speciesSlug']) {
+        form.elements['speciesSlug'].value =
+            plant.speciesSlug ?? (plant.species?.toLowerCase().replaceAll(' ', '-') || '');
+    }
+    if (form.elements['photoUrl']) {
+        form.elements['photoUrl'].value = plant.photoUrl ?? '';
+    }
+    if (form.elements['location']) {
+        form.elements['location'].value = plant.location ?? '';
+    }
+    if (form.elements['wateringIntervalDays']) {
+        form.elements['wateringIntervalDays'].value = (plant.wateringIntervalDays ?? 7);
+    }
+    if (form.elements['notes']) {
+        form.elements['notes'].value = plant.notes ?? '';
+    }
+    // Optional expansion of form: last Watered edit?
+    // if (form.elements['lastWatered']) form.elements['lastWatered'].value = plant.lastWatered ?? '';
+
+    // mark form as editing and store id
+    form.dataset.editingId = plant.id;
+
+    // update UI labels
+    submitBtn.textContent = 'Save changes';
+    if (heading) heading.textContent = 'Edit plant';
+
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+export function cancelEditPlant() {
+    const form = qs('#plantForm');
+    const submitBtn = qs('#addPlantBtn');
+    const heading = qs('.section-head h2');
+
+    if (!form || !submitBtn) return;
+
+    delete form.dataset.editingId;
+    form.reset();
+    const interval = form.querySelector('input[name="wateringIntervalDays"]');
+    if (interval) {
+        interval.value = 7;
+    }
+
+    submitBtn.textContent = 'Add plant';
+    if (heading) {
+        heading.textContent = 'Plant dashboard'
+    }
+
+    qs('#capturedPlantPreview')?.classList.add('hidden');
 }
